@@ -29,6 +29,13 @@ public class BoundingBox {
 		return fromPositionAndSize(pos.x, pos.y, width, height);
 	}
 	
+	public static BoundingBox fromCenterAndSize(double x, double y, double width, double height) {
+		return fromPositionAndSize(x - width / 2, y - height / 2, width, height);
+	}
+	public static BoundingBox fromCenterAndSize(Point pos, double width, double height) {
+		return fromCenterAndSize(pos.x, pos.y, width, height);
+	}
+	
 	public double getWidth() { return (maxX - minX); }
 	public double getHeight() { return (maxY - minY); }
 	

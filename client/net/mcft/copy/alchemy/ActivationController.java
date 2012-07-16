@@ -20,9 +20,13 @@ public class ActivationController {
 	
 	public void update() {
 		if (!player.isSneaking() || player.getCurrentEquippedItem() != null ||
-			circle.isDead || !player.isEntityAlive())
+			circle.isDead || !player.isEntityAlive()) {
 			// Abort if player isn't sneaking, holding an item, dead or circle was destroyed.
 			abort();
+			return;
+		}
+		circle.activeTimer = Math.min(circle.activeTimer + 0.05f, 1);
+		if (circle.activeTimer >= 1) finish();
 	}
 	
 	public void abort() {
@@ -34,17 +38,16 @@ public class ActivationController {
 		circle.setDead();
 		stopped = true;
 		
-		int x = (int)circle.posX;
-		int y = (int)circle.posY;
-		int z = (int)circle.posZ;
 		World world = circle.worldObj;
 		
-		// Remove and drop the block.
-		int blockId = world.getBlockId(x, y, z);
-		int blockMetadata = world.getBlockMetadata(x, y, z);
-		Block block = Block.blocksList[blockId];
-		world.setBlockWithNotify(x, y, z, 0);
-		block.harvestBlock(world, player, x, y, z, blockMetadata);
+		for (BlockPosition pos : circle.getAttachedBlocks()) {
+			int blockId = world.getBlockId(pos.x, pos.y, pos.z);
+			if (blockId == 0) continue;
+			int blockMetadata = world.getBlockMetadata(pos.x, pos.y, pos.z);
+			Block block = Block.blocksList[blockId];
+			world.setBlockWithNotify(pos.x, pos.y, pos.z, 0);
+			block.harvestBlock(world, player, pos.x, pos.y, pos.z, blockMetadata);
+		}
 	}
 
 }

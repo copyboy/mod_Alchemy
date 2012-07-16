@@ -64,7 +64,7 @@ public class ShapeCircle extends Shape {
 					// Return if line length is not enough to form a full circle.
 					return null;
 				avgDis /= list.size();
-				return new ShapeCircle(original.getCenter(), avgDis);
+				return new ShapeCircle(original.getCenter(), avgDis * original.getWidth() / 2);
 			}
 		};
 	}

@@ -32,10 +32,10 @@ public class RenderCircle extends Render {
 			case 4:	GL11.glRotatef(90.0f,  0,  1, 0); break;
 			case 5: GL11.glRotatef(90.0f,  0, -1, 0); break;
 		}
-		GL11.glTranslatef(-0.5f, -0.5f, -0.502f);
+		GL11.glTranslated(0, 0, -0.002);
 		
 		// Get vector and texture bounds.
-		BoundingBox bb = BoundingBox.one;
+		BoundingBox bb = BoundingBox.fromCenterAndSize(0, 0, circle.radius * 2, circle.radius * 2);
 		BoundingBox uv = BoundingBox.one.move(0, 0).mult(1 / 8.0);
 		Tessellator tes = Tessellator.instance;
 		tes.startDrawingQuads();

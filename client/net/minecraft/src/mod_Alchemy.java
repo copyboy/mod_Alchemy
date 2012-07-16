@@ -26,7 +26,7 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 	SaveDataHandler saveDataHandler = new SaveDataHandler();
 	
 	@Override
-	public String getVersion() { return "0.1.0"; }
+	public String getVersion() { return "0.0.0"; }
 	@Override
 	public boolean clientSideRequired() { return true; }
 	@Override
@@ -92,8 +92,10 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 			blockY = pos.blockY;
 			blockZ = pos.blockZ;
 		}
-		if (blockX != pos.blockX || blockY != pos.blockY || blockZ != pos.blockZ ||
-			circleOrientation != pos.sideHit)
+		if (circleOrientation != pos.sideHit ||
+			(circleOrientation / 2 == 2 && blockX != pos.blockX) ||
+			(circleOrientation / 2 == 0 && blockY != pos.blockY) ||
+			(circleOrientation / 2 == 1 && blockZ != pos.blockZ))
 			// Return if block position or side don't match.
 			return;
 		
@@ -107,9 +109,12 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 			case 4: point = new Point(1 - (pos.hitVec.zCoord - blockZ), pos.hitVec.yCoord - blockY); break;
 			case 5: point = new Point(     pos.hitVec.zCoord - blockZ,  pos.hitVec.yCoord - blockY); break;
 		}
-		if (!circlePointList.isEmpty() && point.distanceTo(circlePointList.get(circlePointList.size() - 1)) < 0.005)
-			// Return if new point is too close to last point.
-			return;
+		if (!circlePointList.isEmpty()) {
+			double distance = point.distanceTo(circlePointList.get(circlePointList.size() - 1));
+			if (distance < 0.005 || distance > 0.7)
+				// Return if new point is too close or far to last point.
+				return;
+		}
 		circlePointList.add(point);
 		return;
 	}
@@ -127,7 +132,12 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 			return;
 		
 		// Temporary: Spawn circle entity when shape is recognized.
-		world.spawnEntityInWorld(new EntityCircle(world, blockX, blockY, blockZ, circleOrientation));
+		ShapeCircle circle = (ShapeCircle)shape;
+		EntityCircle entity = EntityCircle.createFromBlockPosition(
+				world, blockX, blockY, blockZ,
+				circle.x, circle.y,
+				(float)circle.radius, circleOrientation);
+		world.spawnEntityInWorld(entity);
 	}
 	
 	void updateActivation(Minecraft mc, EntityPlayer player, World world, MovingObjectPosition pos) {
@@ -159,7 +169,7 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 	}
 	void releaseActivationButton(Minecraft mc, EntityPlayer player, World world, MovingObjectPosition pos) {
 		if (activationController == null) return;
-		activationController.finish();
+		activationController.abort();
 		activationController = null;
 	}
 	
@@ -231,7 +241,9 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 	
 	/* Returns a circle at a position in a world, facing a specific direction, or null if none was found. */
 	public EntityCircle findCircle(World world, int blockX, int blockY, int blockZ, int side) {
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(blockX, blockY, blockZ, blockX + 1, blockY + 1, blockZ + 1);
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
+				blockX - 0.1, blockY - 0.1, blockZ - 0.1,
+				blockX + 1.1, blockY + 1.1, blockZ + 1.1);
 		List circles = world.getEntitiesWithinAABB(EntityCircle.class, aabb);
 		for (Object obj : circles) {
 			EntityCircle circle = (EntityCircle)obj;
