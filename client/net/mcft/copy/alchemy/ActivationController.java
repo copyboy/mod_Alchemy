@@ -1,7 +1,8 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 public class ActivationController {
 

@@ -1,11 +1,13 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
-import java.util.List;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.entity.Entity;
 
 import org.lwjgl.opengl.GL11;
 
-import net.mcft.copy.alchemy.geometry.*;
-import net.minecraft.src.*;
+import client.net.mcft.copy.alchemy.geometry.BoundingBox;
 
 public class RenderCircle extends Render {
 

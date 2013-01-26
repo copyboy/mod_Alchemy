@@ -1,18 +1,18 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Chunk;
-import net.minecraft.src.CompressedStreamTools;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.NBTTagList;
-import net.minecraft.src.World;
-import net.minecraft.src.forge.ISaveEventHandler;
-import net.minecraft.src.forge.MinecraftForge;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class SaveDataHandler implements ISaveEventHandler {
 
@@ -36,7 +36,12 @@ public class SaveDataHandler implements ISaveEventHandler {
 		Minecraft mc = ModLoader.getMinecraftInstance();
 		String worldDirectoryName = world.getSaveHandler().getSaveDirectoryName();
 		String saveFileName = "alchemy.dat";
-		String saveLocation = (MinecraftForge.isClient() ? "saves/%s/%s" : "%s/%s");
+		String saveLocation;
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		switch(side) {
+		case CLIENT: saveLocation = "saves/%s/%s";
+		default : saveLocation = "%s/%s";
+		}
 		return new File(mc.mcDataDir, String.format(saveLocation, worldDirectoryName, saveFileName));
 	}
 	
