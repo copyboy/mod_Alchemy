@@ -26,6 +26,7 @@ import org.lwjgl.opengl.GL11;
 
 import client.net.mcft.copy.alchemy.ActivationController;
 import client.net.mcft.copy.alchemy.EntityCircle;
+import client.net.mcft.copy.alchemy.EventHandler;
 import client.net.mcft.copy.alchemy.ItemStick;
 import client.net.mcft.copy.alchemy.RenderCircle;
 import client.net.mcft.copy.alchemy.SaveDataHandler;
@@ -34,7 +35,7 @@ import client.net.mcft.copy.alchemy.geometry.Shape;
 import client.net.mcft.copy.alchemy.geometry.ShapeCircle;
 import client.net.mcft.copy.alchemy.geometry.ShapeRecognizer;
 
-public class mod_Alchemy extends BaseMod implements IRenderWorldLastHandler, IHighlightHandler {
+public class mod_Alchemy extends BaseMod /*implements IRenderWorldLastHandler, IHighlightHandler*/ {
 
 	public static mod_Alchemy instance;
 	
@@ -45,18 +46,16 @@ public class mod_Alchemy extends BaseMod implements IRenderWorldLastHandler, IHi
 	boolean pressingActivationButton;
 	ActivationController activationController;
 	
-	SaveDataHandler saveDataHandler = new SaveDataHandler();
-	
 	@Override
 	public String getVersion() { return "0.0.0"; }
 	
 	@Override
 	public void load() {
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		instance = this;
 		Item.stick = new ItemStick();
 		
 		ModLoader.setInGameHook(this, true, true);
-		MinecraftForge.registerSaveHandler(saveDataHandler);
 		MinecraftForgeClient.registerHighlightHandler(this);
 		MinecraftForgeClient.registerRenderLastHandler(this);
 
@@ -91,7 +90,7 @@ public class mod_Alchemy extends BaseMod implements IRenderWorldLastHandler, IHi
 	
 	void updateDrawing(Minecraft mc, EntityPlayerSP player, MovingObjectPosition pos) {
 		ItemStack stack = player.getItemInUse();
-		if (stack == null || stack.itemID != Item.stick.shiftedIndex) {
+		if (stack == null || stack.itemID != Item.stick.itemID) {
 			// Return and clear list if current used item is not ItemStick.
 			circlePointList = null;
 			return;
