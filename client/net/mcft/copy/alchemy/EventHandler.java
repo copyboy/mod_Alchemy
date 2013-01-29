@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,14 +11,18 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.src.ModLoader;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.world.WorldEvent.Load;
+import net.minecraftforge.event.world.WorldEvent.Save;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.Side;
 
 public class EventHandler {
 	
 	HashMap<String, PlayerData> allPlayerData = new HashMap<String, PlayerData>();
 	
 	@ForgeSubscribe
-	public void onWorldLoad(EntityJoinWorldEvent evt) {
+	public void onWorldLoad(Load evt) {
 		
 		NBTTagCompound compound;
 		try {
@@ -37,6 +38,24 @@ public class EventHandler {
 			NBTTagCompound playerCompound = (NBTTagCompound)list.tagAt(i);
 			PlayerData playerData = PlayerData.FromNBT(playerCompound);
 			allPlayerData.put(playerData.name, playerData);
+		}
+	}
+	
+	@ForgeSubscribe
+	public void onWorldSave(Save evt) {
+		
+		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		compound.setTag("players", list);
+		for (PlayerData data : allPlayerData.values())
+			list.appendTag(data.ToNBT());
+		try {
+			File saveFile = getSaveFile(evt.world);
+			saveFile.createNewFile();
+			CompressedStreamTools.write(compound, saveFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
 		}
 	}
 	
@@ -57,14 +76,10 @@ public class EventHandler {
 	public File getSaveFile(World world) {
 		Minecraft mc = ModLoader.getMinecraftInstance();
 		String worldDirectoryName = world.getSaveHandler().getSaveDirectoryName();
-		String saveFileName = "alchemy.dat";
-		String saveLocation;
-		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		switch(side) {
-		case CLIENT: saveLocation = "saves/%s/%s";
-		default : saveLocation = "%s/%s";
-		}
-		return new File(mc.mcDataDir, String.format(saveLocation, worldDirectoryName, saveFileName));
+		String saveFileName = "/alchemy.dat";
+		String saveLocation = "/saves/";
+		File savedFile = new File(mc.getMinecraftDir() + saveLocation + worldDirectoryName + saveFileName);
+		return savedFile;
+		//return new File(mc.mcDataDir, worldDirectoryName + saveLocation + saveFileName);
 	}
-
 }

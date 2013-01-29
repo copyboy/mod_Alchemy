@@ -22,7 +22,7 @@ public class RenderCircle extends Render {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glPushMatrix();
 		
-		loadTexture("/alchemy/circles.png");
+		loadTexture("/client/alchemy/circles.png");
 		
 		// Move to circle position and orientation
 		GL11.glTranslated(x, y, z);

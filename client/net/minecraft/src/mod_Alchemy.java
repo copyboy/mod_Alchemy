@@ -29,7 +29,6 @@ import client.net.mcft.copy.alchemy.EntityCircle;
 import client.net.mcft.copy.alchemy.EventHandler;
 import client.net.mcft.copy.alchemy.ItemStick;
 import client.net.mcft.copy.alchemy.RenderCircle;
-import client.net.mcft.copy.alchemy.SaveDataHandler;
 import client.net.mcft.copy.alchemy.geometry.Point;
 import client.net.mcft.copy.alchemy.geometry.Shape;
 import client.net.mcft.copy.alchemy.geometry.ShapeCircle;
@@ -56,8 +55,6 @@ public class mod_Alchemy extends BaseMod /*implements IRenderWorldLastHandler, I
 		Item.stick = new ItemStick();
 		
 		ModLoader.setInGameHook(this, true, true);
-		MinecraftForgeClient.registerHighlightHandler(this);
-		MinecraftForgeClient.registerRenderLastHandler(this);
 
 		Minecraft mc = ModLoader.getMinecraftInstance();
 		ModLoader.registerKey(this, mc.gameSettings.keyBindAttack, false);

@@ -18,7 +18,7 @@ public class ItemStick extends Item {
 
 	@Override
 	public String getTextureFile() {
-		return "/alchemy/items.png";
+		return "/client/alchemy/items.png";
 	}
 
 	@Override

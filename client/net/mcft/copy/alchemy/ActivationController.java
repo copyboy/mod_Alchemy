@@ -47,7 +47,8 @@ public class ActivationController {
 			int blockMetadata = world.getBlockMetadata(pos.x, pos.y, pos.z);
 			Block block = Block.blocksList[blockId];
 			world.setBlockWithNotify(pos.x, pos.y, pos.z, 0);
-			block.harvestBlock(world, player, pos.x, pos.y, pos.z, blockMetadata);
+			block.breakBlock(world, pos.x, pos.y, pos.z, blockId, blockMetadata);
+			//block.harvestBlock(world, player, pos.x, pos.y, pos.z, blockMetadata);
 		}
 	}
 
