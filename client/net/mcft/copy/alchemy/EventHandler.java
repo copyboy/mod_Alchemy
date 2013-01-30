@@ -77,9 +77,10 @@ public class EventHandler {
 		Minecraft mc = ModLoader.getMinecraftInstance();
 		String worldDirectoryName = world.getSaveHandler().getSaveDirectoryName();
 		String saveFileName = "/alchemy.dat";
-		String saveLocation = "/saves/";
+		Side side = FMLCommonHandler.instance().getEffectiveSide();
+		if(side == CLIENT) saveLocation = "/saves/"
+		else saveLocation = "/";
 		File savedFile = new File(mc.getMinecraftDir() + saveLocation + worldDirectoryName + saveFileName);
 		return savedFile;
-		//return new File(mc.mcDataDir, worldDirectoryName + saveLocation + saveFileName);
 	}
 }
