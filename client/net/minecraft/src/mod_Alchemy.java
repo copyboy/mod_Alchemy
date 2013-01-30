@@ -2,7 +2,8 @@ package client.net.minecraft.src;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.monnon.network.NetworkMod;
+import cpw.mods.fml.connon.network.NetworkMod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
