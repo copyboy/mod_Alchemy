@@ -75,7 +75,7 @@ public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler
 	}
 	
 	void preloadTextures() {
-		MinecraftForgeClient.preloadTexture("/client/alchemt/items.png");
+		MinecraftForgeClient.preloadTexture("/client/alchemy/items.png");
 		MinecraftForgeClient.preloadTexture("/client/alchemy/circles.png");
 	}
 	
