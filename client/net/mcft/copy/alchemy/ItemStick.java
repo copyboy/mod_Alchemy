@@ -6,14 +6,16 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraft.creativetab.CreativeTabs;
 
-public class ItemStick extends Item {
+public class ItemStick extends Item implements ITransCircleDrawer {
 
 	public ItemStick() {
 		super(24);
 		setItemName("stick");
 		setIconCoord(0, 0);
 		setFull3D();
+		setCreativeTab(CreativeTabs.materials);
 	}
 
 	@Override
