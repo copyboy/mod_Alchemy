@@ -51,11 +51,8 @@ public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler
 	boolean pressingActivationButton;
 	ActivationController activationController;
 	
-	@Override
-	public String getVersion() { return "0.0.0"; }
-	
-	@Override
-	public void load() {
+	@Init
+	public void load(FMLInitializationEvent evt) {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		instance = this;
 		Item.stick = new ItemStick();
@@ -69,7 +66,6 @@ public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler
 		preloadTextures();
 	}
 	
-	@Override
 	public void addRenderer(Map map) {
 		map.put(EntityCircle.class, new RenderCircle());
 	}
@@ -79,7 +75,7 @@ public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler
 		MinecraftForgeClient.preloadTexture("/client/alchemy/circles.png");
 	}
 	
-	@Override
+	//TODO: Move to tick handler
 	public boolean onTickInGame(float partialTicks, Minecraft mc) {
 		EntityPlayerSP player = mc.thePlayer;
 		World world = player.worldObj;
