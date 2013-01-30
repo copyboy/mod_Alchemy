@@ -1,5 +1,9 @@
 package client.net.minecraft.src;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.monnon.network.NetworkMod;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +15,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.BaseMod;
 import net.minecraft.src.ModLoader;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumMovingObjectType;
@@ -34,8 +37,11 @@ import client.net.mcft.copy.alchemy.geometry.Shape;
 import client.net.mcft.copy.alchemy.geometry.ShapeCircle;
 import client.net.mcft.copy.alchemy.geometry.ShapeRecognizer;
 
-public class mod_Alchemy extends BaseMod /*implements IRenderWorldLastHandler, IHighlightHandler*/ {
+@Mod(modid = "alchemy", name = "Transmutation Circles Library", version = "v1")
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler*/ {
 
+        @Instance("alchemy")
 	public static mod_Alchemy instance;
 	
 	int circleOrientation;
@@ -69,8 +75,8 @@ public class mod_Alchemy extends BaseMod /*implements IRenderWorldLastHandler, I
 	}
 	
 	void preloadTextures() {
-		MinecraftForgeClient.preloadTexture("/redstoneTools/items.png");
-		MinecraftForgeClient.preloadTexture("/redstoneTools/circles.png");
+		MinecraftForgeClient.preloadTexture("/client/alchemt/items.png");
+		MinecraftForgeClient.preloadTexture("/client/alchemy/circles.png");
 	}
 	
 	@Override
