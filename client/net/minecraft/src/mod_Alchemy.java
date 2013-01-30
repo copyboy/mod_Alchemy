@@ -1,19 +1,49 @@
-package net.minecraft.src;
+package client.net.minecraft.src;
 
-import java.io.File;
-import java.util.*;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.connon.network.NetworkMod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.src.ModLoader;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumMovingObjectType;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.mcft.copy.alchemy.*;
-import net.mcft.copy.alchemy.geometry.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.forge.*;
+import client.net.mcft.copy.alchemy.ActivationController;
+import client.net.mcft.copy.alchemy.EntityCircle;
+import client.net.mcft.copy.alchemy.EventHandler;
+import client.net.mcft.copy.alchemy.ItemStick;
+import client.net.mcft.copy.alchemy.ITransCircleDrawer;
+import client.net.mcft.copy.alchemy.RenderCircle;
+import client.net.mcft.copy.alchemy.geometry.Point;
+import client.net.mcft.copy.alchemy.geometry.Shape;
+import client.net.mcft.copy.alchemy.geometry.ShapeCircle;
+import client.net.mcft.copy.alchemy.geometry.ShapeRecognizer;
 
-public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, IHighlightHandler {
+@Mod(modid = "alchemy", name = "Transmutation Circles Library", version = "v1")
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler*/ {
 
+        @Instance("alchemy")
 	public static mod_Alchemy instance;
 	
 	int circleOrientation;
@@ -23,24 +53,13 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 	boolean pressingActivationButton;
 	ActivationController activationController;
 	
-	SaveDataHandler saveDataHandler = new SaveDataHandler();
-	
-	@Override
-	public String getVersion() { return "0.0.0"; }
-	@Override
-	public boolean clientSideRequired() { return true; }
-	@Override
-	public boolean serverSideRequired() { return false; }
-	
-	@Override
-	public void load() {
+	@Init
+	public void load(FMLInitializationEvent evt) {
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		instance = this;
 		Item.stick = new ItemStick();
 		
 		ModLoader.setInGameHook(this, true, true);
-		MinecraftForge.registerSaveHandler(saveDataHandler);
-		MinecraftForgeClient.registerHighlightHandler(this);
-		MinecraftForgeClient.registerRenderLastHandler(this);
 
 		Minecraft mc = ModLoader.getMinecraftInstance();
 		ModLoader.registerKey(this, mc.gameSettings.keyBindAttack, false);
@@ -49,17 +68,16 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 		preloadTextures();
 	}
 	
-	@Override
 	public void addRenderer(Map map) {
 		map.put(EntityCircle.class, new RenderCircle());
 	}
 	
 	void preloadTextures() {
-		MinecraftForgeClient.preloadTexture("/redstoneTools/items.png");
-		MinecraftForgeClient.preloadTexture("/redstoneTools/circles.png");
+		MinecraftForgeClient.preloadTexture("/client/alchemy/items.png");
+		MinecraftForgeClient.preloadTexture("/client/alchemy/circles.png");
 	}
 	
-	@Override
+	//TODO: Move to tick handler
 	public boolean onTickInGame(float partialTicks, Minecraft mc) {
 		EntityPlayerSP player = mc.thePlayer;
 		World world = player.worldObj;
@@ -73,7 +91,7 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 	
 	void updateDrawing(Minecraft mc, EntityPlayerSP player, MovingObjectPosition pos) {
 		ItemStack stack = player.getItemInUse();
-		if (stack == null || stack.itemID != Item.stick.shiftedIndex) {
+		if (stack == null || !(stack instanceof ITransCircleDrawer)) {
 			// Return and clear list if current used item is not ItemStick.
 			circlePointList = null;
 			return;
@@ -173,17 +191,15 @@ public class mod_Alchemy extends NetworkMod implements IRenderWorldLastHandler, 
 		activationController = null;
 	}
 	
-	@Override
 	public boolean onBlockHighlight(RenderGlobal render, EntityPlayer player,
 			                        MovingObjectPosition target, int i, ItemStack stack, float partialTicks) {
-		if (stack == null || stack.itemID != Item.stick.shiftedIndex || player.getItemInUse() != stack)
+		if (stack == null || stack.itemID != Item.stick.itemID || player.getItemInUse() != stack)
 			return false;
 		// Only draw selection box (not block breaking) if ItemStick is in use.
 		render.drawSelectionBox(player, target, i, stack, partialTicks);
 		return true;
 	}
 	
-	@Override
 	public void onRenderWorldLast(RenderGlobal renderer, float partialTicks) {
 		if (circlePointList == null) return;
 		// Show the player what e's drawing.

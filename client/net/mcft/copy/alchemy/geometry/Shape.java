@@ -1,4 +1,4 @@
-package net.mcft.copy.alchemy.geometry;
+package client.net.mcft.copy.alchemy.geometry;
 
 public abstract class Shape {
 

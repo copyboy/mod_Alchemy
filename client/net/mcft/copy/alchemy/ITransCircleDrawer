@@ -1,0 +1,5 @@
+package client.net.mcft.copy.alchemy;
+
+/* Dummy interface for use with multiple items that can draw circles */
+public interface ITransCircleDrawer {
+}

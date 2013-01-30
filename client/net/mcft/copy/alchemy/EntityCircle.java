@@ -1,9 +1,11 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.src.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class EntityCircle extends Entity {
 

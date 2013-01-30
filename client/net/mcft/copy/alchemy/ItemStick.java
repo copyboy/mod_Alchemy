@@ -1,20 +1,26 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
-import net.minecraft.src.*;
-import net.minecraft.src.forge.ITextureProvider;
+import client.net.minecraft.src.mod_Alchemy;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraft.creativetab.CreativeTabs;
 
-public class ItemStick extends Item implements ITextureProvider {
+public class ItemStick extends Item implements ITransCircleDrawer {
 
 	public ItemStick() {
 		super(24);
 		setItemName("stick");
 		setIconCoord(0, 0);
 		setFull3D();
+		setCreativeTab(CreativeTabs.materials);
 	}
 
 	@Override
 	public String getTextureFile() {
-		return "/alchemy/items.png";
+		return "/client/alchemy/items.png";
 	}
 
 	@Override

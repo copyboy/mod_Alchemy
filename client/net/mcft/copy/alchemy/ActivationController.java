@@ -1,7 +1,8 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 public class ActivationController {
 
@@ -46,8 +47,11 @@ public class ActivationController {
 			int blockMetadata = world.getBlockMetadata(pos.x, pos.y, pos.z);
 			Block block = Block.blocksList[blockId];
 			world.setBlockWithNotify(pos.x, pos.y, pos.z, 0);
+			System.out.println("A");
+			System.out.printf("ABreaking block: %d, metadata: %d, name: %s", blockId, blockMetadata, block.getBlockName());
+			//block.breakBlock(world, pos.x, pos.y, pos.z, blockId, blockMetadata);
+			System.out.printf("BBreaking block: %d, metadata: %d, name: %s", blockId, blockMetadata, block.getBlockName());
 			block.harvestBlock(world, player, pos.x, pos.y, pos.z, blockMetadata);
 		}
 	}
-
 }

@@ -1,10 +1,6 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-
-import net.minecraft.src.*;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class PlayerData {
 

@@ -1,4 +1,4 @@
-package net.mcft.copy.alchemy;
+package client.net.mcft.copy.alchemy;
 
 public class BlockPosition {
 
