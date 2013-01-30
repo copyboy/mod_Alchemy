@@ -202,7 +202,7 @@ public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler
 	
 	public void onRenderWorldLast(RenderGlobal renderer, float partialTicks) {
 		if (circlePointList == null) return;
-		// Show the player what he's drawing.
+		// Show the player what e's drawing.
 		
 		EntityPlayerSP player = renderer.mc.thePlayer;
 		double xDif = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
