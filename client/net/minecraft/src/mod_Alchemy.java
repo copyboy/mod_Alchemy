@@ -32,6 +32,7 @@ import client.net.mcft.copy.alchemy.ActivationController;
 import client.net.mcft.copy.alchemy.EntityCircle;
 import client.net.mcft.copy.alchemy.EventHandler;
 import client.net.mcft.copy.alchemy.ItemStick;
+import client.net.mcft.copy.alchemy.ITransCircleDrawer;
 import client.net.mcft.copy.alchemy.RenderCircle;
 import client.net.mcft.copy.alchemy.geometry.Point;
 import client.net.mcft.copy.alchemy.geometry.Shape;
@@ -90,7 +91,7 @@ public class mod_Alchemy /*implements IRenderWorldLastHandler, IHighlightHandler
 	
 	void updateDrawing(Minecraft mc, EntityPlayerSP player, MovingObjectPosition pos) {
 		ItemStack stack = player.getItemInUse();
-		if (stack == null || stack.itemID != Item.stick.itemID) {
+		if (stack == null || !(stack instanceof ITransCircleDrawer)) {
 			// Return and clear list if current used item is not ItemStick.
 			circlePointList = null;
 			return;
